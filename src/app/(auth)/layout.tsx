@@ -15,8 +15,7 @@ export default function AuthLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div>
-        <Link href={'/'}>Home</Link>
+    <div className='w-full flex justify-center'>
         {children}
     </div>
   );

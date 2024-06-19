@@ -1,6 +1,7 @@
 'use client'
 import { ThemeProvider } from "@/components/theme-provider"
 import { ModeToggle } from "@/components/ModeToggle"
+import { useToast } from "@/components/ui/use-toast";
 import { useState } from 'react'
 import {
   Dialog,
@@ -24,6 +25,11 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/react/20/solid'
+import clsx from "clsx";
+import Link from "next/link"
+import envConfig from "@/config"
+import Cookies from "js-cookie"
+import { useRouter } from "next/navigation"
 
 const products = [
   { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
@@ -37,25 +43,62 @@ const callsToAction = [
   { name: 'Contact sales', href: '#', icon: PhoneIcon },
 ]
 
-// function classNames(...classes) {
-//   return classes.filter(Boolean).join(' ')
-// }
+function classNames(...classes: any[]) {
+  return classes.filter(Boolean).join(' ')
+}
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const navigation = useRouter()
+  const { toast } = useToast();
+  const darkMode = {
+    darkMode: false,
+  }
 
     function classNames(arg0: string, arg1: string): string | undefined {
         throw new Error('Function not implemented.')
     }
+    
+    const handleLogout = async () => {
+      try {
+        const token = Cookies.get('TOKEN_KEY')
+    
+        const result = await fetch(`${envConfig.NEXT_PUBLIC_API_ENDPOINT}/auth/logout`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({})
+        });
+    
+        if (!result.ok) {
+          throw new Error('Logout failed')
+        }
+        Cookies.remove('TOKEN_KEY')
+        navigation.push('/login');
+        console.log('Logout successful')
+      } catch (error) {
+        console.error('Logout error:', error)
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: 'Failed to log out'
+        });
+      }
+    };
 
   return (
-    <header className="bg-white">
+    <header className={clsx('bg-white', [{
+        'dark': darkMode,
+        'dark:bg-gray-800': darkMode,
+    }])}>
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
         <div className="flex lg:flex-1">
-          <a href="#" className="-m-1.5 p-1.5">
+          <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
             <img className="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="" />
-          </a>
+          </Link>
         </div>
         <div className="flex lg:hidden">
           <button
@@ -67,9 +110,13 @@ export default function Header() {
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
         </div>
-        <PopoverGroup className="hidden lg:flex lg:gap-x-12">
+        <PopoverGroup className="hidden lg:flex lg:gap-x-12 items-center justify-between">
           <Popover className="relative">
-            <PopoverButton className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">
+            <PopoverButton className={clsx("flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900", [{
+                'dark': darkMode,
+                'dark:text-gray-300': darkMode,
+                // 'text-gray-900': !darkMode,
+            }])}>
               Product
               <ChevronDownIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
             </PopoverButton>
@@ -118,31 +165,59 @@ export default function Header() {
             </Transition>
           </Popover>
 
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-            Features
+          <a href="/products" className={clsx("text-sm font-semibold leading-6 text-gray-900", [{
+            'dark': darkMode,
+            'dark:text-gray-300': darkMode
+          }])}>
+            Products
           </a>
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+          <a href="#" className={clsx("text-sm font-semibold leading-6 text-gray-900", [{
+            'dark': darkMode,
+            'dark:text-gray-300': darkMode
+          }])}>
             Marketplace
           </a>
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+          <a href="#" className={clsx("text-sm font-semibold leading-6 text-gray-900", [{
+            'dark': darkMode,
+            'dark:text-gray-300': darkMode
+          }])}>
             Company
           </a>
-
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
         <ModeToggle />
-          {/* {children} */}
         </ThemeProvider>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="/login" className="text-sm font-semibold leading-6 text-gray-900">
-            Log in <span aria-hidden="true">&rarr;</span>
-          </a>
+          <Link href="/login"className={clsx("text-sm font-semibold leading-6 text-gray-900", [{
+            'dark': darkMode,
+            'dark:text-gray-300': darkMode
+          }])}>
+            Log in
+          </Link>
         </div>
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+          <Link href="/register"className={clsx("text-sm font-semibold leading-6 text-gray-900", [{
+            'dark': darkMode,
+            'dark:text-gray-300': darkMode
+          }])}>
+            Register
+          </Link>
+        </div>
+        <button className="hidden lg:flex lg:flex-1 lg:justify-end" onClick={handleLogout}>
+          <div>
+            <Link href="#"className={clsx("text-sm font-semibold leading-6 text-gray-900", [{
+              'dark': darkMode,
+              'dark:text-gray-300': darkMode
+            }])}>
+              Logout
+            </Link>
+          </div>
+        </button>
       </nav>
       <Dialog className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
         <div className="fixed inset-0 z-10" />
