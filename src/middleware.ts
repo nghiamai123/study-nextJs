@@ -3,14 +3,19 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(req: NextRequest) {
-  const token = req.cookies.get('TOKEN_KEY');
+  const token = req.cookies.get('sessionToken');
+  const { pathname } = req.nextUrl;
 
-  if (!token) {
+  if (!token && pathname === '/') {
     return NextResponse.redirect(new URL('/login', req.url));
+  } else if (token && (pathname === '/login' || pathname === '/register')) {
+    return NextResponse.redirect(new URL('/', req.url));
   }
 
   const requestHeaders = new Headers(req.headers);
-  requestHeaders.set('Authorization', `Bearer ${token}`);
+  if (token) {
+    requestHeaders.set('Authorization', `Bearer ${token}`);
+  }
 
   return NextResponse.next({
     request: {
@@ -20,5 +25,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/'], // Specify the paths you want the middleware to apply to
+  matcher: ['/', '/login', '/register'], // Specify the paths you want the middleware to apply to
 };

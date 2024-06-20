@@ -1,7 +1,4 @@
 'use client'
-import { ThemeProvider } from "@/components/theme-provider"
-import { ModeToggle } from "@/components/ModeToggle"
-import { useToast } from "@/components/ui/use-toast";
 import { useState } from 'react'
 import {
   Dialog,
@@ -25,11 +22,9 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/react/20/solid'
-import clsx from "clsx";
+import clsx from "clsx"
 import Link from "next/link"
-import envConfig from "@/config"
-import Cookies from "js-cookie"
-import { useRouter } from "next/navigation"
+import Logout from "./Logout"
 
 const products = [
   { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
@@ -47,10 +42,8 @@ function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Header() {
+export default function Header({initialSessionToken}: any) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const navigation = useRouter()
-  const { toast } = useToast();
   const darkMode = {
     darkMode: false,
   }
@@ -58,36 +51,6 @@ export default function Header() {
     function classNames(arg0: string, arg1: string): string | undefined {
         throw new Error('Function not implemented.')
     }
-    
-    const handleLogout = async () => {
-      try {
-        const token = Cookies.get('TOKEN_KEY')
-    
-        const result = await fetch(`${envConfig.NEXT_PUBLIC_API_ENDPOINT}/auth/logout`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({})
-        });
-    
-        if (!result.ok) {
-          throw new Error('Logout failed')
-        }
-        Cookies.remove('TOKEN_KEY')
-        navigation.push('/login');
-        console.log('Logout successful')
-      } catch (error) {
-        console.error('Logout error:', error)
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: 'Failed to log out'
-        });
-      }
-    };
-
   return (
     <header className={clsx('bg-white', [{
         'dark': darkMode,
@@ -171,11 +134,11 @@ export default function Header() {
           }])}>
             Products
           </a>
-          <a href="#" className={clsx("text-sm font-semibold leading-6 text-gray-900", [{
+          <a href="/me" className={clsx("text-sm font-semibold leading-6 text-gray-900", [{
             'dark': darkMode,
             'dark:text-gray-300': darkMode
           }])}>
-            Marketplace
+            My Profile
           </a>
           <a href="#" className={clsx("text-sm font-semibold leading-6 text-gray-900", [{
             'dark': darkMode,
@@ -183,14 +146,6 @@ export default function Header() {
           }])}>
             Company
           </a>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-        <ModeToggle />
-        </ThemeProvider>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <Link href="/login"className={clsx("text-sm font-semibold leading-6 text-gray-900", [{
@@ -208,16 +163,7 @@ export default function Header() {
             Register
           </Link>
         </div>
-        <button className="hidden lg:flex lg:flex-1 lg:justify-end" onClick={handleLogout}>
-          <div>
-            <Link href="#"className={clsx("text-sm font-semibold leading-6 text-gray-900", [{
-              'dark': darkMode,
-              'dark:text-gray-300': darkMode
-            }])}>
-              Logout
-            </Link>
-          </div>
-        </button>
+        <Logout value={initialSessionToken}/>
       </nav>
       <Dialog className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
         <div className="fixed inset-0 z-10" />
@@ -268,32 +214,6 @@ export default function Header() {
                     </>
                   )}
                 </Disclosure>
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Features
-                </a>
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Marketplace
-                </a>
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Company
-                </a>
-              </div>
-              <div className="py-6">
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Log in
-                </a>
               </div>
             </div>
           </div>

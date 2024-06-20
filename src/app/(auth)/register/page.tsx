@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import envConfig from "@/config";
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form';
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
   name: z.string().min(1, 'Username is required'),
@@ -23,6 +24,7 @@ type FormSchemaType = z.infer<typeof formSchema>;
 
 export default function Register() {
   const router = useRouter();
+  const { toast } = useToast();
   const formMethods = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -34,7 +36,6 @@ export default function Register() {
   });
 
   const onSubmit = async (data: FormSchemaType) => {
-    console.log(data);
     try{
       const result: any = await fetch(`${envConfig.NEXT_PUBLIC_API_ENDPOINT}/auth/register`,{
         method: 'POST',
@@ -42,11 +43,19 @@ export default function Register() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
-      }).then(response => response.json());
-  
-      if(result.data.token){
-        router.push('/login')
+      });
+
+      const res = await result.json();
+
+      if(!res){
+        throw new Error('Something went wrong');
       }
+  
+      router.push('/login')
+      toast({
+        title: "Create a new account",
+        description: 'Register successfully'
+      });
     }
     catch(error){
       console.log(error);

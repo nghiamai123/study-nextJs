@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/toaster";
+import { ThemeProvider } from "@/components/theme-provider";
 
-import Header from "@/components/Header";
+import Header from "@/app/component/Header";
+import { ModeToggle } from "@/components/ModeToggle";
+import AppProvider from "./AppProvider";
+import { cookies } from "next/headers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,12 +21,22 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = cookies()
+  const sessionToken = cookieStore.get('sessionToken')
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <Header />
+        <Header initialSessionToken={sessionToken?.value}/>
         <Toaster />
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AppProvider initialSessionToken={sessionToken?.value}>{children}</AppProvider>
+          <ModeToggle />
+        </ThemeProvider>
       </body>
     </html>
   );

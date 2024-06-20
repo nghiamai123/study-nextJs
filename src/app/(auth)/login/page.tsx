@@ -16,6 +16,7 @@ import { z } from "zod";
 import envConfig from "@/config";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
+import { useAppContext } from "@/app/AppProvider"
 import Cookies from "js-cookie";
 
 const formSchema = z.object({
@@ -31,6 +32,7 @@ type FormSchemaType = z.infer<typeof formSchema>;
 export default function Login() {
   const router = useRouter();
   const { toast } = useToast();
+  const { setSessionToken } = useAppContext()
   const formMethods = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,9 +57,16 @@ export default function Login() {
         throw { status: response.status, payload };
       }
 
-      Cookies.set("TOKEN_KEY", payload.data.token, { expires: 1 }); // expires in 7 days
+      Cookies.set("sessionToken", payload.data.token, { expires: 1 }); // expires in 7 days
+      
+      // Login successful
+      toast({
+        variant: "default",
+        title: "Logged in successfully",
+      });
 
       router.push('/');
+
       return payload;
     } catch (error: any) {
       const errors = error.payload.errors as { field: string; message: string }[];
@@ -76,6 +85,13 @@ export default function Login() {
           description: error.payload.message
         });
       } 
+      else {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: error.payload.message
+        });
+      }
     }
   };
 

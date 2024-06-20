@@ -5,7 +5,6 @@ import React from 'react'
 export default function ButtonRedirect() {
 const router = useRouter();
   const handleClick = () => {
-    console.log("re-rendering")
     router.push("/login");
   };
   
