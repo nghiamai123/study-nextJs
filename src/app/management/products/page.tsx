@@ -5,7 +5,7 @@ import Card from "./card";
 import Loader from "@/components/Loader";
 
 export default function Products() {
-  const [Products, setProducts] = useState([]);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const getProducts = async () => {
@@ -37,14 +37,14 @@ export default function Products() {
 
   useEffect(() => {
     getProducts();
-  }, [Products]);
+  }, [products]);
 
   return loading ? (
     <Loader />
   ) : (
     <div>
       <ul className="absolute left-80 grid grid-cols-3 gap-5 m-5">
-        {Products.map((product) => (
+        {products.map((product) => (
           <Card product={product} />
         ))}
       </ul>

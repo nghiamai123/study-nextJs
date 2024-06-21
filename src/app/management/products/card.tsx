@@ -5,7 +5,7 @@ import React from "react";
 export default function Card({ product }: any) {
   const handleDelete = async () => {
     await fetch(
-      `https://6670df540900b5f8724bd1b7.mockapi.io/product/${product.id}`,
+      `https://6670df540900b5f8724bd1b7.mockapi.io/products/${product.id}`,
       {
         method: "DELETE",
       }
