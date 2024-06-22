@@ -42,7 +42,7 @@ export default function Product({ params }: any) {
   return (
     <section>
       <div className="container mx-auto">
-        <div className="bg-dark shadow-lg rounded-lg p-6 mt-6">
+        <div className="bg-[#1f2937] shadow-lg rounded-lg p-6 mt-6">
           <button className="py-2">
             <Link href="/products">
               <FontAwesomeIcon icon={faArrowLeft} /> BACK
@@ -59,16 +59,15 @@ export default function Product({ params }: any) {
             <div className="lg:w-1/2">
               <h2
                 style={{
-                  color: "black",
                   fontWeight: "600",
                   fontSize: "24px",
-                  fontFamily: "Audiowide, Sans-serif",
+                  textDecorationColor: '#0ea5e9',
                 }}
               >
                 {product.name}
               </h2>
-              <p className="mb-2">{product.name}</p>
-              <p className="mb-2">{product.price}đ</p>
+              <p className="mb-2 underline ">{product.name}</p>
+              <p className="mb-2">${product.price}</p>
             </div>
             {/* <div className="lg:w-1/2">
               <h3 className="text-lg font-bold mb-2">Select Date</h3>

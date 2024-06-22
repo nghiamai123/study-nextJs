@@ -15,7 +15,7 @@ export default function Card({ user }: any) {
       })
       .then((user) => {
         toast({
-          title: "Error",
+          title: "Completed",
           description: "Delete user successfully",
           variant: "default",
         });

@@ -3,77 +3,63 @@ import React, { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 
-export default function Product({ params }: any) {
-  const { slug } = params;
+interface User {
+  email: string;
+  password: string;
+  id: string;
+  username: string;
+  phone: string;
+}
+
+export default function User() {
   const { toast } = useToast();
   const router = useRouter();
-  const [product, setProduct] = useState({
-    price: "",
-    image: "",
+  const [user, setUser] = useState<User>({
+    email: "",
+    password: "",
     id: "",
-    name: "",
-    description: "",
+    username: "",
+    phone: "",
   });
 
-  useEffect(() => {
-    fetch(`https://6670df540900b5f8724bd1b7.mockapi.io/products/${slug}`, {
-      method: "GET",
-      headers: { "content-type": "application/json" },
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-      })
-      .then((product) => {
-        setProduct(product);
-      })
-      .catch((error) => {
-        toast({
-          title: "Error",
-          description: error.message,
-          variant: "destructive",
-        });
-      });
-  }, []);
-
-  const handlePrice = (e: any) => {
+  const handleEmail = (e: any) => {
     e.preventDefault();
-    setProduct({ ...product, price: e.target.value });
+    setUser({ ...user, email: e.target.value });
   };
 
-  const handleImage = (e: any) => {
+  const handlePassword = (e: any) => {
     e.preventDefault();
-    setProduct({ ...product, image: e.target.value });
+    setUser({ ...user, password: e.target.value });
   };
 
-  const handleProductName = (e: any) => {
+  const handleUsername = (e: any) => {
     e.preventDefault();
-    setProduct({ ...product, name: e.target.value });
+    setUser({ ...user, username: e.target.value });
   };
 
-  const handleDescription = (e: any) => {
+  const handlePhone = (e: any) => {
     e.preventDefault();
-    setProduct({ ...product, description: e.target.value });
+    setUser({ ...user, phone: e.target.value });
   };
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    fetch(`https://6670df540900b5f8724bd1b7.mockapi.io/products/${slug}`, {
-      method: "PUT",
+    fetch(`https://6670df540900b5f8724bd1b7.mockapi.io/users`, {
+      method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify(product),
+      body: JSON.stringify(user),
     })
       .then((res) => {
         if (res.ok) {
           return res.json();
         }
       })
-      .then((product) => {
-        router.push("/");
+      .then((user) => {
+        router.push("/management/users");
+        console.log(user);
         toast({
           title: "Success",
-          description: "User updated successfully",
+          description: "User create successfully",
           variant: "default",
         });
       })
@@ -91,53 +77,53 @@ export default function Product({ params }: any) {
       <form className="max-w-sm mx-auto mt-20" onSubmit={handleSubmit}>
         <div className="mb-5">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Price
+            Email
           </label>
           <input
             type="text"
             id="large-input"
-            placeholder={product?.price}
-            value={product?.price}
-            onChange={handlePrice}
+            placeholder={user?.email}
+            value={user?.email}
+            onChange={handleEmail}
             className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
         </div>
         <div className="mb-5">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Image Url
+            Phone Number
           </label>
           <input
             type="text"
             id="large-input"
-            placeholder={product?.image}
-            value={product?.image}
-            onChange={handleImage}
+            placeholder={user?.phone}
+            value={user?.phone}
+            onChange={handlePhone}
             className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
         </div>
         <div className="mb-5">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Description
+            Password
           </label>
           <input
             type="text"
             id="large-input"
-            placeholder={product?.description}
-            value={product?.description}
-            onChange={handleDescription}
+            placeholder={user?.password}
+            value={user?.password}
+            onChange={handlePassword}
             className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
         </div>
         <div className="mb-5">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Product Name
+            Username
           </label>
           <input
             type="text"
             id="large-input"
-            placeholder={product?.name}
-            value={product?.name}
-            onChange={handleProductName}
+            placeholder={user?.username}
+            value={user?.username}
+            onChange={handleUsername}
             className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
         </div>
@@ -145,7 +131,7 @@ export default function Product({ params }: any) {
           type="submit"
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-full"
         >
-          Update Product
+          Create User
         </button>
       </form>
     </>

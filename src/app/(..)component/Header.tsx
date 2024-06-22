@@ -6,11 +6,12 @@ import { useEffect, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 
 export default function Header() {
-  const isLogin2 = localStorage.getItem("user") ? true : false;
   const route = useRouter();
   const [isLogin, setIsLogin] = useState(false);
 
   useEffect(() => {
+    const isLogin2 = window.localStorage.getItem("user") ? true : false;
+
     if (isLogin2 !== false) {
       setIsLogin(() => true);
     } else {
@@ -21,6 +22,7 @@ export default function Header() {
   const handleLogout = () => {
     localStorage.removeItem("user");
 
+    setIsLogin(() => false);
     setIsLogin(() => false);
 
     route.push("/login");
@@ -115,7 +117,7 @@ export default function Header() {
             <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
               <li>
                 <Link
-                  href="#"
+                  href="/"
                   className="block py-2 pr-4 pl-3 text-white rounded bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0 dark:text-white"
                   aria-current="page"
                 >

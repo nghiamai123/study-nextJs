@@ -72,7 +72,7 @@ export default function Card({ product }: any) {
         </div>
         <div className="flex items-center justify-between">
           <span className="text-3xl font-bold text-gray-900 dark:text-white">
-            $599
+            ${product.price}
           </span>
           <Link
             href={`/products/${product.id}`}

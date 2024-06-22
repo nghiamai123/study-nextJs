@@ -24,13 +24,11 @@ export default function User({ params }: any) {
         if (res.ok) {
           return res.json();
         }
-        // handle error
       })
       .then((user) => {
         setUser(user);
       })
       .catch((error) => {
-        // handle error
         toast({
           title: "Error",
           description: error.message,
@@ -70,11 +68,10 @@ export default function User({ params }: any) {
         if (res.ok) {
           return res.json();
         }
-        // handle error
       })
       .then((user) => {
         router.push("/");
-
+        console.log(user);
         toast({
           title: "Success",
           description: "User updated successfully",
@@ -82,7 +79,6 @@ export default function User({ params }: any) {
         });
       })
       .catch((error) => {
-        // handle error
         toast({
           title: "Error",
           description: error.message,

@@ -18,7 +18,7 @@ export default function Card({ product }: any) {
       })
       .then((product) => {
         toast({
-          title: "Error",
+          title: "Success",
           description: "Delete product successfully",
           variant: "default",
         });

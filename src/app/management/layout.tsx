@@ -2,7 +2,6 @@
 import "@/css/satoshi.css";
 import React, { useEffect, useState } from "react";
 import Loader from "@/components/Loader";
-import Header from "../(..)component/Header";
 import { Toaster } from "@/components/ui/toaster";
 import SideBar from "@/components/SideBar";
 

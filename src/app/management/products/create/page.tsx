@@ -3,39 +3,24 @@ import React, { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 
-export default function Product({ params }: any) {
-  const { slug } = params;
+interface Product {
+  price: "";
+  image: "";
+  id: "";
+  name: "";
+  description: "";
+}
+
+export default function Product() {
   const { toast } = useToast();
   const router = useRouter();
-  const [product, setProduct] = useState({
+  const [product, setProduct] = useState<Product>({
     price: "",
     image: "",
     id: "",
     name: "",
     description: "",
   });
-
-  useEffect(() => {
-    fetch(`https://6670df540900b5f8724bd1b7.mockapi.io/products/${slug}`, {
-      method: "GET",
-      headers: { "content-type": "application/json" },
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-      })
-      .then((product) => {
-        setProduct(product);
-      })
-      .catch((error) => {
-        toast({
-          title: "Error",
-          description: error.message,
-          variant: "destructive",
-        });
-      });
-  }, []);
 
   const handlePrice = (e: any) => {
     e.preventDefault();
@@ -59,8 +44,8 @@ export default function Product({ params }: any) {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    fetch(`https://6670df540900b5f8724bd1b7.mockapi.io/products/${slug}`, {
-      method: "PUT",
+    fetch(`https://6670df540900b5f8724bd1b7.mockapi.io/products`, {
+      method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(product),
     })
@@ -70,10 +55,11 @@ export default function Product({ params }: any) {
         }
       })
       .then((product) => {
-        router.push("/");
+        router.push("/management/products");
+        console.log(product);
         toast({
           title: "Success",
-          description: "User updated successfully",
+          description: "Product create successfully",
           variant: "default",
         });
       })
@@ -145,7 +131,7 @@ export default function Product({ params }: any) {
           type="submit"
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-full"
         >
-          Update Product
+          Create Product
         </button>
       </form>
     </>
