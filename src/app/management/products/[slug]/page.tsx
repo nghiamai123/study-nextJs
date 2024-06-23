@@ -35,7 +35,7 @@ export default function Product({ params }: any) {
           variant: "destructive",
         });
       });
-  }, []);
+  }, [slug, toast]);
 
   const handlePrice = (e: any) => {
     e.preventDefault();

@@ -35,7 +35,7 @@ export default function User({ params }: any) {
           variant: "destructive",
         });
       });
-  }, []);
+  }, [slug, toast]);
 
   const handleEmail = (e: any) => {
     e.preventDefault();

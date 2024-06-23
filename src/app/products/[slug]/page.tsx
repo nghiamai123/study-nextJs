@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import Image from "next/image";
 
 interface Product {
   id: string;
@@ -35,7 +36,6 @@ export default function Product({ params }: any) {
   };
 
   useEffect(() => {
-    
     fetchData();
   }, []);
 
@@ -50,7 +50,7 @@ export default function Product({ params }: any) {
           </button>
           <div className="flex flex-col lg:flex-row gap-8">
             <figure>
-              <img
+              <Image
                 src={product.image}
                 alt={product.image}
                 className="w-[280px] h-[300px] object-cover rounded-xl "
@@ -61,7 +61,7 @@ export default function Product({ params }: any) {
                 style={{
                   fontWeight: "600",
                   fontSize: "24px",
-                  textDecorationColor: '#0ea5e9',
+                  textDecorationColor: "#0ea5e9",
                 }}
               >
                 {product.name}
@@ -117,7 +117,7 @@ export default function Product({ params }: any) {
           {tab === "note" && (
             <div className="mt-6">
               <h3 className="text-lg font-bold mb-2">Note</h3>
-              <p>{ product.price }</p>
+              <p>{product.price}</p>
             </div>
           )}
         </div>
