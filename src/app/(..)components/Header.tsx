@@ -21,12 +21,24 @@ export default function Header() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
+    window.localStorage.removeItem("user");
 
     setIsLogin(() => false);
-    setIsLogin(() => false);
 
-    route.push("/login");
+    fetch("api/logout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({}),
+    }).then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error("API Error");
+    });
+
+    window.location.href = "/login";
 
     toast({
       variant: "default",
@@ -42,6 +54,8 @@ export default function Header() {
             <Image
               src="https://flowbite.com/docs/images/logo.svg"
               className="mr-3 h-6 sm:h-9"
+              width={100}
+              height={100}
               alt="Flowbite Logo"
             />
             <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">

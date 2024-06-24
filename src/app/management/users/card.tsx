@@ -11,7 +11,6 @@ export default function Card({ user }: any) {
         if (res.ok) {
           return res.json();
         }
-        // handle error
       })
       .then((user) => {
         toast({
@@ -21,7 +20,6 @@ export default function Card({ user }: any) {
         });
       })
       .catch((error) => {
-        // handle error
         toast({
           title: "Error",
           description: error.message,

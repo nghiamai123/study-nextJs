@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
 
-interface Data {
+interface User {
   email: string;
   password: string;
 }
@@ -23,7 +23,7 @@ export default function Login() {
     setEmail(e.target.value);
   };
 
-  const account: Data = {
+  const account: User = {
     email: email,
     password: password,
   };
@@ -34,58 +34,62 @@ export default function Login() {
       toast({
         title: "Check your form",
         description: "Please enter your email address and password",
-        variant: "destructive"
+        variant: "destructive",
       });
     } else {
-      try {
-        const response = await fetch(
-          "https://6670df540900b5f8724bd1b7.mockapi.io/users",
-          {
-            method: "GET",
-            headers: { "content-type": "application/json" },
+      const response = await fetch(
+        "https://6670df540900b5f8724bd1b7.mockapi.io/users",
+        {
+          method: "GET",
+          headers: { "content-type": "application/json" },
+        }
+      )
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
           }
-        )
-          .then((res) => {
-            if (res.ok) {
-              return res.json();
-            }
-            // handle error
-            throw new Error("API Error (missing data)");
-          })
-          .then((users) => {
-            // find with the list of users
-            const user = users.find(
-              (user: Data) =>
-                user.email === account.email &&
-                user.password === account.password
-            );
-            if (user) {
-              return user;
-            }
-            else {
-              throw new Error("Email or password is incorrect");
-            }
-          })
-          .catch((error) => {
-            console.error(error);
+          throw new Error("API Error (missing data)");
+        })
+        .then((users) => {
+          const user: User = users.find(
+            (user: User) =>
+              user.email === account.email && user.password === account.password
+          );
+          if (user) {
+            fetch("api/auth", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(user),
+            }).then((response) => {
+              if (response.ok) {
+                return response.json();
+              }
+              throw new Error("API Error");
+            });
+
+            localStorage.setItem("user", JSON.stringify(user));
+
+            toast({
+              variant: "default",
+              title: "Logged in successfully",
+            });
+
+            window.location.href = '/';
+
+            return user;
+          } else {
+            throw new Error("Email or password is incorrect");
+          }
+        })
+        .catch((error) => {
+          toast({
+            title: "Error login",
+            description: error.message,
+            variant: "destructive",
           });
-
-        localStorage.setItem('user', JSON.stringify(response));
-
-        // window.location.href = "/";
-
-        router.push("/");
-        toast({
-          variant: "default",
-          title: "Logged in successfully",
         });
-      } catch (error: any) {
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: error.message,
-        });
-      }
     }
   };
   return (
@@ -146,6 +150,11 @@ export default function Login() {
                       type="checkbox"
                       className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
                     />
+                  </div>
+                  <div className="ml-3 text-sm">
+                    <label className="text-gray-500 dark:text-gray-300">
+                      Remember me
+                    </label>
                   </div>
                 </div>
                 <a

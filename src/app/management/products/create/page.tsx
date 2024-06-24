@@ -1,14 +1,15 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
+// import UploadImage from "@/app/(..)components/UploadImage";
 
 interface Product {
-  price: "";
-  image: "";
-  id: "";
-  name: "";
-  description: "";
+  price: string;
+  image: string;
+  id: string;
+  name: string;
+  description: string;
 }
 
 export default function Product() {
@@ -22,118 +23,138 @@ export default function Product() {
     description: "",
   });
 
-  const handlePrice = (e: any) => {
-    e.preventDefault();
-    setProduct({ ...product, price: e.target.value });
-  };
-
-  const handleImage = (e: any) => {
-    e.preventDefault();
-    setProduct({ ...product, image: e.target.value });
-  };
-
-  const handleProductName = (e: any) => {
-    e.preventDefault();
-    setProduct({ ...product, name: e.target.value });
-  };
-
-  const handleDescription = (e: any) => {
-    e.preventDefault();
-    setProduct({ ...product, description: e.target.value });
-  };
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    fetch(`https://6670df540900b5f8724bd1b7.mockapi.io/products`, {
+  const getUrlUpdateUserImg = async (file: File) => {
+    console.log(file);
+    const CLOUD_NAME = "dkvvko14m";
+    const PRESET_NAME = "l7vyrfgr";
+    const FOLDER_NAME = "internShip";
+    const api = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+    const formData = new FormData();
+    formData.append("upload_preset", PRESET_NAME);
+    formData.append("folder", FOLDER_NAME);
+    formData.append("file", file);
+    const options = {
       method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(product),
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-      })
-      .then((product) => {
-        router.push("/management/products");
-        console.log(product);
-        toast({
-          title: "Success",
-          description: "Product create successfully",
-          variant: "default",
-        });
-      })
-      .catch((error) => {
+      body: formData,
+    };
+    try {
+      const res = await fetch(api, options);
+      const data = await res.json();
+      return data.secure_url;
+    } catch (error) {
+      console.error("Error uploading to Cloudinary:", error);
+      throw error;
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setProduct({ ...product, [name]: value });
+  };
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    console.log(file);
+    if (file) {
+      try {
+        const imageUrl = await getUrlUpdateUserImg(file);
+        setProduct({ ...product, image: imageUrl });
+      } catch (error) {
         toast({
           title: "Error",
-          description: error.message,
+          description: "Failed to upload image",
           variant: "destructive",
         });
+      }
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(
+        `https://6670df540900b5f8724bd1b7.mockapi.io/products`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(product),
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to create product");
+      }
+
+      const newProduct = await res.json();
+      router.push("/management/products");
+      toast({
+        title: "Success",
+        description: "Product created successfully",
+        variant: "default",
       });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
-    <>
-      <form className="max-w-sm mx-auto mt-20" onSubmit={handleSubmit}>
-        <div className="mb-5">
-          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Price
-          </label>
-          <input
-            type="text"
-            id="large-input"
-            placeholder={product?.price}
-            value={product?.price}
-            onChange={handlePrice}
-            className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          />
-        </div>
-        <div className="mb-5">
-          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Image Url
-          </label>
-          <input
-            type="text"
-            id="large-input"
-            placeholder={product?.image}
-            value={product?.image}
-            onChange={handleImage}
-            className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          />
-        </div>
-        <div className="mb-5">
-          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Description
-          </label>
-          <input
-            type="text"
-            id="large-input"
-            placeholder={product?.description}
-            value={product?.description}
-            onChange={handleDescription}
-            className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          />
-        </div>
-        <div className="mb-5">
-          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Product Name
-          </label>
-          <input
-            type="text"
-            id="large-input"
-            placeholder={product?.name}
-            value={product?.name}
-            onChange={handleProductName}
-            className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          />
-        </div>
-        <button
-          type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-full"
-        >
-          Create Product
-        </button>
-      </form>
-    </>
+    <form className="max-w-sm mx-auto mt-20" onSubmit={handleSubmit}>
+      <div className="mb-5">
+        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Price
+        </label>
+        <input
+          type="text"
+          name="price"
+          value={product.price}
+          onChange={handleInputChange}
+          className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+      </div>
+      <div className="mb-5">
+        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Image
+        </label>
+        <input
+          type="file"
+          onChange={handleImageChange}
+          className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+      </div>
+      <div className="mb-5">
+        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Description
+        </label>
+        <input
+          type="text"
+          name="description"
+          value={product.description}
+          onChange={handleInputChange}
+          className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+      </div>
+      <div className="mb-5">
+        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Product Name
+        </label>
+        <input
+          type="text"
+          name="name"
+          value={product.name}
+          onChange={handleInputChange}
+          className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+      </div>
+      <button
+        type="submit"
+        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-full"
+      >
+        Create Product
+      </button>
+    </form>
   );
 }

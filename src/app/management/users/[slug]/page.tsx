@@ -70,7 +70,7 @@ export default function User({ params }: any) {
         }
       })
       .then((user) => {
-        router.push("/");
+        router.push("/management/users");
         console.log(user);
         toast({
           title: "Success",

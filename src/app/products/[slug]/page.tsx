@@ -53,6 +53,8 @@ export default function Product({ params }: any) {
               <Image
                 src={product.image}
                 alt={product.image}
+                width={500}
+                height={500}
                 className="w-[280px] h-[300px] object-cover rounded-xl "
               />
             </figure>

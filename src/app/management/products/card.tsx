@@ -44,6 +44,8 @@ export default function Card({ product }: any) {
           <Image
             className="h-auto w-full object-container"
             src={product.image}
+            width={800}
+            height={800}
             alt="image description"
           />
           {product.name}

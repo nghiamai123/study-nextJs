@@ -10,6 +10,8 @@ export default function Card({ product }: any) {
         <Image
           className="p-8 rounded-t-lg"
           src={product.image}
+          width={800}
+          height={800}
           alt="product image"
         />
       </Link>
