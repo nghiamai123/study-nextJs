@@ -71,25 +71,6 @@ export default function Product({ params }: any) {
               <p className="mb-2 underline ">{product.name}</p>
               <p className="mb-2">${product.price}</p>
             </div>
-            {/* <div className="lg:w-1/2">
-              <h3 className="text-lg font-bold mb-2">Select Date</h3>
-              <input
-                type="date"
-                className="border rounded p-2 mb-4 w-full appearance-none focus:outline-none focus:ring-2 focus:ring-[#06B6D4]"
-                onChange={handleGetTime}
-                value={selectedDate}
-                min={currentDate}
-              />
-              <div className="grid sm:grid-cols-3 gap-4">
-                {timeList.length > 0 ? (
-                  timeList.map((time) => (
-                    <ButtonTime times={time} handle={payMent} key={time.id} />
-                  ))
-                ) : (
-                  <p className="text-red">Unavailable time</p>
-                )}
-              </div>
-            </div> */}
           </div>
           <div className="border-b-2 border-gray-200 my-6"></div>
           <div className="flex space-x-4">

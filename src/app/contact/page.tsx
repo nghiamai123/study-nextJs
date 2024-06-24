@@ -1,9 +1,9 @@
 // pages/index.js
-import SubscribeForm from '@/app/(..)components/ContactForm';
+import SubscribeForm from '@/components/ContactForm';
 
 export default function Contact() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900">
+    <div className="min-h-screen flex items-center justify-center dark:bg-gray-900">
       <SubscribeForm />
     </div>
   );

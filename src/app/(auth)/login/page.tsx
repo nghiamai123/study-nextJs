@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
-import Image from "next/image";
 
 interface User {
   email: string;
@@ -76,7 +75,7 @@ export default function Login() {
               title: "Logged in successfully",
             });
 
-            window.location.href = '/';
+            window.location.href = "/";
 
             return user;
           } else {
@@ -99,15 +98,7 @@ export default function Login() {
           href="#"
           className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
         >
-          <Image
-            src="https://imgvisuals.com/cdn/shop/products/animated-contact-linear-ui-icon-287432.gif?v=1697532256
-"
-            className="w-8 h-8 mr-2 object-cover border-x-2"
-            width={25}
-            height={15}
-            alt="logo"
-          />
-          Flowbite
+          Restaurants
         </a>
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">

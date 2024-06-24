@@ -15,9 +15,8 @@ export default function Card({ product }: any) {
         if (res.ok) {
           return res.json();
         }
-        // handle error
       })
-      .then((product) => {
+      .then(() => {
         toast({
           title: "Success",
           description: "Delete product successfully",
@@ -25,7 +24,6 @@ export default function Card({ product }: any) {
         });
       })
       .catch((error) => {
-        // handle error
         toast({
           title: "Error",
           description: error.message,

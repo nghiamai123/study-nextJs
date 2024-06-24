@@ -1,14 +1,26 @@
-// components/ContactForm.js
-import React from 'react';
+"use client";
+import React from "react";
 
 const ContactForm = () => {
+  async function handleSubmit(event: any) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+
+    await fetch("/api/contact", {
+      method: "post",
+      body: formData,
+    });
+  }
   return (
-    <div className="max-w-md mx-auto p-6 bg-gray-800 rounded-lg shadow-md text-gray-300">
+    <div className="max-w-md mt-1 p-6 bg-gray-800 rounded-lg shadow-md text-gray-300">
       <h2 className="text-xl font-semibold mb-4">Get more updates...</h2>
       <p className="mb-4">
-        Do you want to get notified when a new component is added to Flowbite? Sign up for our newsletter and you'll be among the first to find out about new features, components, versions, and tools.
+        Would you like to stay updated on our latest menu additions and special
+        offers? Sign up for our newsletter and be the first to know about new
+        dishes, seasonal menus, promotions, and more!
       </p>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="flex items-center mb-4">
           <input
             type="email"
@@ -24,7 +36,15 @@ const ContactForm = () => {
         </div>
       </form>
       <p className="text-sm">
-        By subscribing, you agree with ConvertKit's <a href="#" className="text-blue-500 hover:underline">Terms of Service</a> and <a href="#" className="text-blue-500 hover:underline">Privacy Policy</a>.
+        By subscribing, you agree with ConvertKit's{" "}
+        <a href="#" className="text-blue-500 hover:underline">
+          Terms of Service
+        </a>{" "}
+        and{" "}
+        <a href="#" className="text-blue-500 hover:underline">
+          Privacy Policy
+        </a>
+        .
       </p>
     </div>
   );
