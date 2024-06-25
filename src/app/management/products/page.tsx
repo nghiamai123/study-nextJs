@@ -6,10 +6,10 @@ import Loader from "@/components/Loader";
 import Link from "next/link";
 
 export default function Products() {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([{id: ""}]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const getProducts = async () => {
+  const fetchProducts = async () => {
     try {
       const response = await fetch(
         "https://6670df540900b5f8724bd1b7.mockapi.io/products"
@@ -23,6 +23,7 @@ export default function Products() {
       const timeOutId = setTimeout(() => setLoading(false), 1000);
 
       setProducts(data);
+      setLoading(false);
 
       return () => {
         clearTimeout(timeOutId);
@@ -36,19 +37,25 @@ export default function Products() {
     }
   };
 
+  const handleDelete = (deletedProductId: string) => {
+    setProducts((prevProducts) =>
+      prevProducts.filter((product) => product.id !== deletedProductId)
+    );
+  };
+
   useEffect(() => {
-    getProducts();
-  }, [products]);
+    fetchProducts();
+  }, []);
 
   return loading ? (
     <Loader />
   ) : (
-    <div>
-      <ul className="absolute left-80 grid grid-cols-3 gap-5 m-5">
+    <>
+      <div className="grid grid-cols-3 gap-2 col-span-2 mt-5 mb-5 mr-5 relative -left-20">
         {products.map((product, index) => (
-          <Card product={product} key={index} />
+          <Card product={product} key={index} onDelete={handleDelete}/>
         ))}
-      </ul>
+      </div>
       <div data-dial-init className="fixed end-6 bottom-6 group">
         <Link href="/management/products/create">
           <button
@@ -67,9 +74,9 @@ export default function Products() {
             >
               <path
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 d="M9 1v16M1 9h16"
               />
             </svg>
@@ -77,6 +84,6 @@ export default function Products() {
           </button>
         </Link>
       </div>
-    </div>
+    </>
   );
 }

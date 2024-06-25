@@ -20,7 +20,7 @@ export default function RootLayout({
         <link rel="icon" href="/images/iconTab.jpg" type="image/x-icon" />
       </head>
 
-      <body className={inter.className}>
+      <body className={`${inter.className} container`}>
         <Header />
         <Toaster />
         <ThemeProvider

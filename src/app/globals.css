@@ -73,14 +73,25 @@
   body {
     @apply bg-background text-foreground;
   }
+  .container {
+    padding-right: 0rem !important;
+    padding-left: 0rem !important;
+  }
   .banner {
     background-image: url("/images/beer_category_banner.webp");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     object-fit: contain;
+    min-height: 100vh;
   }
   .bgWeb {
     background-image: linear-gradient(to right, #d2b48c, #a0522d, #8b4513);
+  }
+}
+
+@layer utilities {
+  .grid-cols-custom {
+    grid-template-columns: 200px 1fr;
   }
 }

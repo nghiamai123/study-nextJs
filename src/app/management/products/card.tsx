@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-export default function Card({ product }: any) {
+export default function Card({ product, onDelete }: any) {
   const handleDelete = async () => {
     await fetch(
       `https://6670df540900b5f8724bd1b7.mockapi.io/products/${product.id}`,
@@ -22,6 +22,7 @@ export default function Card({ product }: any) {
           description: "Delete product successfully",
           variant: "default",
         });
+        onDelete(product.id);
       })
       .catch((error) => {
         toast({
@@ -34,7 +35,7 @@ export default function Card({ product }: any) {
 
   return (
     <>
-      <a
+      <Link
         href="#"
         className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
       >
@@ -75,7 +76,7 @@ export default function Card({ product }: any) {
             Block
           </button>
         </p>
-      </a>
+      </Link>
     </>
   );
 }

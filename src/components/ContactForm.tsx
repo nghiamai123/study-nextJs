@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import React from "react";
 
 const ContactForm = () => {
@@ -37,13 +38,13 @@ const ContactForm = () => {
       </form>
       <p className="text-sm">
         By subscribing, you agree with ConvertKit's{" "}
-        <a href="#" className="text-blue-500 hover:underline">
+        <Link href="#" className="text-blue-500 hover:underline">
           Terms of Service
-        </a>{" "}
+        </Link>{" "}
         and{" "}
-        <a href="#" className="text-blue-500 hover:underline">
+        <Link href="#" className="text-blue-500 hover:underline">
           Privacy Policy
-        </a>
+        </Link>
         .
       </p>
     </div>

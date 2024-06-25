@@ -23,7 +23,6 @@ export default function Product() {
   });
 
   const getUrlUpdateUserImg = async (file: File) => {
-    console.log(file);
     const CLOUD_NAME = "dkvvko14m";
     const PRESET_NAME = "l7vyrfgr";
     const FOLDER_NAME = "internShip";
@@ -53,7 +52,6 @@ export default function Product() {
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    console.log(file);
     if (file) {
       try {
         const imageUrl = await getUrlUpdateUserImg(file);
@@ -84,7 +82,6 @@ export default function Product() {
         throw new Error("Failed to create product");
       }
 
-      const newProduct = await res.json();
       router.push("/management/products");
       toast({
         title: "Success",
@@ -101,7 +98,7 @@ export default function Product() {
   };
 
   return (
-    <form className="max-w-sm mx-auto mt-20" onSubmit={handleSubmit}>
+    <form className="mt-20" onSubmit={handleSubmit} style={{width: "110vh"}}>
       <div className="mb-5">
         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
           Price

@@ -1,6 +1,7 @@
 "use client";
 import Cookies from "js-cookie";
 import Image from "next/image";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 export default function MeProfile() {
@@ -45,13 +46,14 @@ export default function MeProfile() {
                     {user?.email}
                   </p>
                   <div className="w-full mt-6">
-                    <a
+                    <Link
+                      href='#'
                       className="flex text-center items-center justify-center w-full pt-4 pr-10 pb-4 pl-10 text-base
                     font-medium text-white bg-indigo-600 rounded-xl transition duration-500 ease-in-out transform
                     hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                       {user?.phone}
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>

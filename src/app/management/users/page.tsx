@@ -44,19 +44,25 @@ export default function Users() {
     }
   };
 
+  const handleDelete = (deletedUserId: string) => {
+    setUsers((users) =>
+      users.filter((user) => user.id !== deletedUserId)
+    );
+  };
+
   useEffect(() => {
     fetchingData();
-  }, [users]);
+  }, []);
 
   return loading ? (
     <Loader />
   ) : (
-    <div>
-      <ul className="absolute left-96 grid grid-cols-3 gap-5 m-5">
+    <>
+      <div className="grid grid-cols-3 gap-2 col-span-2 mt-5 mb-5 mr-5 relative -left-20">
         {users.map((user) => (
-          <Card user={user} key={user.id} />
+          <Card user={user} key={user.id} onDelete={handleDelete}/>
         ))}
-      </ul>
+      </div>
       <div data-dial-init className="fixed end-6 bottom-6 group">
         <Link href="/management/users/create">
           <button
@@ -75,9 +81,9 @@ export default function Users() {
             >
               <path
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 d="M9 1v16M1 9h16"
               />
             </svg>
@@ -85,6 +91,6 @@ export default function Users() {
           </button>
         </Link>
       </div>
-    </div>
+    </>
   );
 }
