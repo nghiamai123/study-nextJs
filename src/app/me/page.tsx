@@ -13,7 +13,6 @@ export default function MeProfile() {
   });
 
   useEffect(() => {
-    // const store = window.localStorage.getItem("user");
     const store = Cookies.get("user");
     setUser(
       store

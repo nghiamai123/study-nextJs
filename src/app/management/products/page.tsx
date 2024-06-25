@@ -46,11 +46,11 @@ export default function Products() {
     <div>
       <ul className="absolute left-80 grid grid-cols-3 gap-5 m-5">
         {products.map((product, index) => (
-          <Card product={product} key={index}/>
+          <Card product={product} key={index} />
         ))}
       </ul>
       <div data-dial-init className="fixed end-6 bottom-6 group">
-        <Link href='/management/products/create'>
+        <Link href="/management/products/create">
           <button
             type="button"
             data-dial-toggle="speed-dial-menu-bottom-right"

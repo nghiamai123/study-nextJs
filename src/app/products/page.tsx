@@ -31,8 +31,9 @@ export default function Products() {
     fetchProducts();
   }, [products]);
 
-  return (
-    loading ? <Loader /> :
+  return loading ? (
+    <Loader />
+  ) : (
     <div className="m-28">
       <div className="grid grid-cols-4 text-wrap ml-auto gap-5">
         {products.map((product) => {

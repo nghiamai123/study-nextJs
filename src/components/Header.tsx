@@ -1,5 +1,4 @@
 "use client";
-import clsx from "clsx";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";

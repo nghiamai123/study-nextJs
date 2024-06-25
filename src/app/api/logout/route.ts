@@ -1,15 +1,14 @@
-import { type NextRequest } from 'next/server';
+import { NextRequest } from "next/server";
 
-export async function POST(request: NextRequest) {
-    const expiresString = 'Thu, 01 Jan 1970 00:00:00 GMT'; 
+export async function POST() {
+  const expiresString = "Thu, 01 Jan 1970 00:00:00 GMT";
+  const cookie = `user=; expires=${expiresString}; path=/`;
 
-    const cookie = `user=; expires=${expiresString}; httpOnly; path=/`;
-
-    return new Response(JSON.stringify({}), {
-        status: 200,
-        headers: {
-            'Content-Type': 'application/json',
-            'Set-Cookie': cookie
-        }
-    });
+  return new Response(JSON.stringify({}), {
+    status: 200,
+    headers: {
+      "Content-Type": "application/json",
+      "Set-Cookie": cookie,
+    },
+  });
 }

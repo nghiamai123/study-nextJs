@@ -1,5 +1,4 @@
-// pages/index.js
-import SubscribeForm from '@/components/ContactForm';
+import SubscribeForm from "@/components/ContactForm";
 
 export default function Contact() {
   return (

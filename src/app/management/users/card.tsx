@@ -12,7 +12,7 @@ export default function Card({ user }: any) {
           return res.json();
         }
       })
-      .then((user) => {
+      .then(() => {
         toast({
           title: "Completed",
           description: "Delete user successfully",

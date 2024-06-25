@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
-// import UploadImage from "@/app/(..)components/UploadImage";
 
 interface Product {
   price: string;
