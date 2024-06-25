@@ -1,49 +1,51 @@
 "use client";
 import clsx from "clsx";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import Image from "next/image";
+import Cookies from "js-cookie";
 
 export default function Header() {
   const route = useRouter();
+  const pathname = usePathname();
   const [isLogin, setIsLogin] = useState(false);
 
   useEffect(() => {
-    const isLogin2 = window.localStorage.getItem("user") ? true : false;
+    const user = Cookies.get("user");
+    setIsLogin(user ? true : false);
+  }, [pathname]);
 
-    if (isLogin2 !== false) {
-      setIsLogin(() => true);
-    } else {
-      setIsLogin(() => false);
-    }
-  }, []);
+  const handleLogout = async () => {
+    try {
+      localStorage.removeItem("user");
+      setIsLogin(false);
 
-  const handleLogout = () => {
-    window.localStorage.removeItem("user");
+      const response = await fetch("api/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+      });
 
-    setIsLogin(() => false);
-
-    fetch("api/logout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({}),
-    }).then((response) => {
-      if (response.ok) {
-        return response.json();
+      if (!response.ok) {
+        throw new Error("API Error");
       }
-      throw new Error("API Error");
-    });
 
-    window.location.href = "/login";
-
-    toast({
-      variant: "default",
-      title: "Logout successful",
-    });
+      toast({
+        variant: "default",
+        title: "Logout successful",
+      });
+      route.push("/login");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error during logout",
+        description: error.message,
+      });
+    }
   };
 
   return (
@@ -63,34 +65,31 @@ export default function Header() {
             </span>
           </Link>
           <div className="flex items-center lg:order-2">
-            <Link
-              href="/login"
-              className={clsx(
-                "text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800",
-                [isLogin ? "hidden" : "block"]
-              )}
-            >
-              Log in
-            </Link>
-            <Link
-              href="/register"
-              className={clsx(
-                "text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800",
-                [isLogin ? "hidden" : "block"]
-              )}
-            >
-              Get started
-            </Link>
-            <Link
-              href="#"
-              onClick={handleLogout}
-              className={clsx(
-                "text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800",
-                [!isLogin ? "hidden" : "block"]
-              )}
-            >
-              Log Out
-            </Link>
+            {!isLogin && (
+              <>
+                <Link
+                  href="/login"
+                  className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
+                >
+                  Log in
+                </Link>
+                <Link
+                  href="/register"
+                  className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
+                >
+                  Get started
+                </Link>
+              </>
+            )}
+            {isLogin && (
+              <Link
+                href="#"
+                onClick={handleLogout}
+                className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
+              >
+                Log Out
+              </Link>
+            )}
             <button
               data-collapse-toggle="mobile-menu-2"
               type="button"

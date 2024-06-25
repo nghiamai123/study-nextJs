@@ -1,4 +1,5 @@
 "use client";
+import Cookies from "js-cookie";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
@@ -12,7 +13,8 @@ export default function MeProfile() {
   });
 
   useEffect(() => {
-    const store = window.localStorage.getItem("user");
+    // const store = window.localStorage.getItem("user");
+    const store = Cookies.get("user");
     setUser(
       store
         ? JSON.parse(store)

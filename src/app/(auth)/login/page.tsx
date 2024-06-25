@@ -14,11 +14,11 @@ export default function Login() {
   const router = useRouter();
   const { toast } = useToast();
 
-  const handlePassword = (e: any) => {
+  const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
 
-  const handleEmail = (e: any) => {
+  const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
@@ -27,7 +27,7 @@ export default function Login() {
     password: password,
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (email === "" || password === "") {
       toast({
@@ -35,62 +35,59 @@ export default function Login() {
         description: "Please enter your email address and password",
         variant: "destructive",
       });
-    } else {
-      const response = await fetch(
+      return;
+    }
+
+    try {
+      const res = await fetch(
         "https://6670df540900b5f8724bd1b7.mockapi.io/users",
         {
           method: "GET",
-          headers: { "content-type": "application/json" },
+          headers: { "Content-Type": "application/json" },
         }
-      )
-        .then((res) => {
-          if (res.ok) {
-            return res.json();
-          }
-          throw new Error("API Error (missing data)");
-        })
-        .then((users) => {
-          const user: User = users.find(
-            (user: User) =>
-              user.email === account.email && user.password === account.password
-          );
-          if (user) {
-            fetch("api/auth", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(user),
-            }).then((response) => {
-              if (response.ok) {
-                return response.json();
-              }
-              throw new Error("API Error");
-            });
+      );
 
-            localStorage.setItem("user", JSON.stringify(user));
+      if (!res.ok) {
+        throw new Error("API Error (missing data)");
+      }
 
-            toast({
-              variant: "default",
-              title: "Logged in successfully",
-            });
+      const users: User[] = await res.json();
+      const user = users.find(
+        (user) =>
+          user.email === account.email && user.password === account.password
+      );
 
-            window.location.href = "/";
-
-            return user;
-          } else {
-            throw new Error("Email or password is incorrect");
-          }
-        })
-        .catch((error) => {
-          toast({
-            title: "Error login",
-            description: error.message,
-            variant: "destructive",
-          });
+      if (user) {
+        const authRes = await fetch("api/auth", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(user),
         });
+
+        if (!authRes.ok) {
+          throw new Error("API Error during authentication");
+        }
+
+        toast({
+          variant: "default",
+          title: "Logged in successfully",
+        });
+
+        router.push("/");
+      } else {
+        throw new Error("Email or password is incorrect");
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error login",
+        description: error.message,
+        variant: "destructive",
+      });
     }
   };
+
   return (
     <nav className="bg-gray-50 dark:bg-gray-900 w-full h-0">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -117,6 +114,7 @@ export default function Login() {
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="name@company.com"
                   onChange={handleEmail}
+                  required
                 />
               </div>
               <div>
@@ -130,6 +128,7 @@ export default function Login() {
                   placeholder="••••••••"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   onChange={handlePassword}
+                  required
                 />
               </div>
               <div className="flex items-center justify-between">

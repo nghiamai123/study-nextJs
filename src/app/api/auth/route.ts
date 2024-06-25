@@ -1,6 +1,7 @@
 import type { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
+    const user = await request.json();
     const now = new Date();
     const expiresInOneDay = new Date(now.getTime() + 24 * 60 * 60 * 1000);
 
@@ -19,7 +20,7 @@ export async function POST(request: NextRequest) {
 
     const expiresString = formatDate(expiresInOneDay);
 
-    const cookie = `isLogin=${true}; expires=${expiresString}; httpOnly; path=/`;
+    const cookie = `user=${JSON.stringify(user)}; expires=${expiresString}; path=/`;
 
     return new Response(expiresString, {
         status: 200,
