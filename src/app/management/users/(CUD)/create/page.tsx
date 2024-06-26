@@ -72,7 +72,7 @@ export default function User() {
 
   return (
     <div className="max-w-sm mx-auto mt-20">
-      <form onSubmit={handleSubmit} style={{width: "110vh"}}>
+      <form onSubmit={handleSubmit} style={{width: "110vh", margin: "0 auto"}}>
         <div className="mb-5">
           <label
             htmlFor="email"

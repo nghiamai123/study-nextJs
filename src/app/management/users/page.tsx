@@ -4,6 +4,7 @@ import Card from "./card";
 import { toast } from "@/components/ui/use-toast";
 import Loader from "@/components/Loader";
 import Link from "next/link";
+import SideBar from "@/components/SideBar";
 
 export default function Users() {
   const [users, setUsers] = useState([
@@ -56,10 +57,15 @@ export default function Users() {
     <Loader />
   ) : (
     <>
-      <div className="grid grid-cols-3 gap-2 col-span-2 mt-5 mb-5 mr-5 relative -left-20">
-        {users.map((user) => (
-          <Card user={user} key={user.id} onDelete={handleDelete} />
-        ))}
+      <div className="grid grid-cols-3 gap-2 h-screen m-0">
+        <div className="col-span-1">
+          <SideBar />
+        </div>
+        <div className="grid grid-cols-3 gap-2 col-span-2 mt-5 mb-5 mr-5 relative -left-20">
+          {users.map((user) => (
+            <Card user={user} key={user.id} onDelete={handleDelete} />
+          ))}
+        </div>
       </div>
       <div data-dial-init className="fixed end-6 bottom-6 group">
         <Link href="/management/users/create">

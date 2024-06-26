@@ -89,7 +89,7 @@ export default function User({ params }: any) {
 
   return (
     <>
-      <form className="mt-20" onSubmit={handleSubmit} style={{width: "110vh"}}>
+      <form className="mt-20" onSubmit={handleSubmit} style={{width: "110vh", margin: "0 auto"}}>
         <div className="mb-5">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
             Email

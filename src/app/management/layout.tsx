@@ -25,12 +25,9 @@ export default function RootLayout({
       {loading ? (
         <Loader />
       ) : (
-        <div className="grid grid-cols-3 gap-2 h-screen m-0">
-          <div className="col-span-1">
-            <SideBar />
-          </div>
+        <>
           {children}
-        </div>
+        </>
       )}
     </div>
   );

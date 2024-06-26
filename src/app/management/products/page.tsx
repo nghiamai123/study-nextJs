@@ -4,9 +4,10 @@ import React, { useEffect, useState } from "react";
 import Card from "./card";
 import Loader from "@/components/Loader";
 import Link from "next/link";
+import SideBar from "@/components/SideBar";
 
 export default function Products() {
-  const [products, setProducts] = useState([{id: ""}]);
+  const [products, setProducts] = useState([{ id: "" }]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const fetchProducts = async () => {
@@ -51,10 +52,15 @@ export default function Products() {
     <Loader />
   ) : (
     <>
-      <div className="grid grid-cols-3 gap-2 col-span-2 mt-5 mb-5 mr-5 relative -left-20">
-        {products.map((product, index) => (
-          <Card product={product} key={index} onDelete={handleDelete}/>
-        ))}
+      <div className="grid grid-cols-3 gap-2 h-screen m-0">
+        <div className="col-span-1">
+          <SideBar />
+        </div>
+        <div className="grid grid-cols-3 gap-2 col-span-2 mt-5 mb-5 mr-5 relative -left-20">
+          {products.map((product, index) => (
+            <Card product={product} key={index} onDelete={handleDelete} />
+          ))}
+        </div>
       </div>
       <div data-dial-init className="fixed end-6 bottom-6 group">
         <Link href="/management/products/create">
