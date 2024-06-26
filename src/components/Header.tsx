@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import Image from "next/image";
 import Cookies from "js-cookie";
-import { ModeToggle } from "@/components/ModeToggle";
 
 export default function Header() {
   const route = useRouter();
@@ -13,7 +12,7 @@ export default function Header() {
   const [isLogin, setIsLogin] = useState(false);
 
   useEffect(() => {
-    const user = Cookies.get("user");
+    const user = Cookies.get("sessionToken");
     setIsLogin(user ? true : false);
   }, [pathname]);
 

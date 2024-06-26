@@ -4,11 +4,6 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
 
-interface User {
-  email: string;
-  password: string;
-}
-
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,11 +18,6 @@ export default function Login() {
     setEmail(e.target.value);
   };
 
-  const account: User = {
-    email: email,
-    password: password,
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (email === "" || password === "") {
@@ -40,46 +30,36 @@ export default function Login() {
     }
 
     try {
-      const res = await fetch(
-        "https://6670df540900b5f8724bd1b7.mockapi.io/users",
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
       if (!res.ok) {
-        throw new Error("API Error (missing data)");
-      }
-
-      const users: User[] = await res.json();
-      const user = users.find(
-        (user) =>
-          user.email === account.email && user.password === account.password
-      );
-
-      if (user) {
-        const authRes = await fetch("api/auth", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(user),
-        });
-
-        if (!authRes.ok) {
-          throw new Error("API Error during authentication");
-        }
-
-        toast({
-          variant: "default",
-          title: "Logged in successfully",
-        });
-
-        router.push("/");
-      } else {
         throw new Error("Email or password is incorrect");
       }
+
+      const result = await res.json();
+
+      const authRes = await fetch("/api/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(result),
+      });
+
+      if (!authRes.ok) {
+        throw new Error("API Error during authentication");
+      }
+
+      toast({
+        variant: "default",
+        title: "Logged in successfully",
+      });
+
+      router.push("/");
     } catch (error: any) {
       toast({
         title: "Error login",
@@ -157,7 +137,7 @@ export default function Login() {
               </div>
               <button
                 type="submit"
-                className="w-full dark:text-white text-black bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
                 Sign in
               </button>

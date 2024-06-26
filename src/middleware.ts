@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
  
 export function middleware(request: NextRequest) {
-  const currentUser = request.cookies.get('user')?.value
+  const currentUser = request.cookies.get('sessionToken')?.value
   
   const { pathname } = request.nextUrl
 
