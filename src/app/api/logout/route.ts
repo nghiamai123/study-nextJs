@@ -1,14 +1,22 @@
-import { NextRequest } from "next/server";
+export async function POST(request: Request) {
+  const sessionToken = await request.json();
 
-export async function POST() {
-  const expiresString = "Thu, 01 Jan 1970 00:00:00 GMT";
-  const cookie = `user=; expires=${expiresString}; path=/`;
+  if (!sessionToken) {
+    return Response.json(
+      { message: "Invalid session token" },
+      {
+        status: 401,
+      }
+    );
+  }
 
-  return new Response(JSON.stringify({}), {
-    status: 200,
-    headers: {
-      "Content-Type": "application/json",
-      "Set-Cookie": cookie,
-    },
-  });
+  return Response.json(
+    {},
+    {
+      status: 200,
+      headers: {
+        "Set-Cookie": `sessionToken=; Path=/; Max-Age=0`,
+      },
+    }
+  );
 }

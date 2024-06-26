@@ -10,33 +10,47 @@ export default function Header() {
   const route = useRouter();
   const pathname = usePathname();
   const [isLogin, setIsLogin] = useState(false);
+  const sessionToken = Cookies.get("sessionToken");
 
   useEffect(() => {
-    const user = Cookies.get("sessionToken");
-    setIsLogin(user ? true : false);
+    setIsLogin(sessionToken ? true : false);
   }, [pathname]);
 
   const handleLogout = async () => {
     try {
-      localStorage.removeItem("user");
       setIsLogin(false);
 
-      const response = await fetch("api/logout", {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_URL}/auth/logout`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${sessionToken}`,
+          },
+          body: JSON.stringify({}),
+        }
+      );
+
+      const result = await response.json();
+
+      await fetch("api/logout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({}),
+        body: JSON.stringify(sessionToken),
       });
 
       if (!response.ok) {
-        throw new Error("API Error");
+        throw new Error("Error logout");
       }
 
       toast({
         variant: "default",
         title: "Logout successful",
       });
+
       route.push("/login");
     } catch (error: any) {
       toast({

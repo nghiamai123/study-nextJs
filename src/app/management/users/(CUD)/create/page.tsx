@@ -53,7 +53,6 @@ export default function User() {
       if (response.ok) {
         const data = await response.json();
         router.push("/management/users");
-        console.log(data);
         toast({
           title: "Success",
           description: "User created successfully",

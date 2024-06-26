@@ -4,7 +4,7 @@ export async function POST(request: Request) {
   const expiresAt = body.data.expiresAt as string;
   if (!sessionToken) {
     return Response.json(
-      { message: "Không nhận được session token" },
+      { message: "Unable to get session token" },
       {
         status: 400,
       }
