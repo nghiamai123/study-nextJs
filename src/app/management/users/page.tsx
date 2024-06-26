@@ -45,9 +45,7 @@ export default function Users() {
   };
 
   const handleDelete = (deletedUserId: string) => {
-    setUsers((users) =>
-      users.filter((user) => user.id !== deletedUserId)
-    );
+    setUsers((users) => users.filter((user) => user.id !== deletedUserId));
   };
 
   useEffect(() => {
@@ -60,7 +58,7 @@ export default function Users() {
     <>
       <div className="grid grid-cols-3 gap-2 col-span-2 mt-5 mb-5 mr-5 relative -left-20">
         {users.map((user) => (
-          <Card user={user} key={user.id} onDelete={handleDelete}/>
+          <Card user={user} key={user.id} onDelete={handleDelete} />
         ))}
       </div>
       <div data-dial-init className="fixed end-6 bottom-6 group">

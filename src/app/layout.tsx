@@ -32,8 +32,8 @@ export default function RootLayout({
           <div
             style={{
               position: "fixed",
-              top: "0.5vw",
-              right: "5vh",
+              top: "10vh",
+              right: "0vw",
               zIndex: "100",
             }}
           >

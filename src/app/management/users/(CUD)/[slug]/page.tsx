@@ -72,7 +72,6 @@ export default function User({ params }: any) {
       })
       .then((user) => {
         router.push("/management/users");
-        console.log(user);
         toast({
           title: "Success",
           description: "User updated successfully",

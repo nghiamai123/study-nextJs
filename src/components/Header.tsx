@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import Image from "next/image";
 import Cookies from "js-cookie";
+import { ModeToggle } from "@/components/ModeToggle";
 
 export default function Header() {
   const route = useRouter();
