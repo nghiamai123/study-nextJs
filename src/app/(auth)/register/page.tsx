@@ -5,15 +5,16 @@ import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
 
 interface Data {
+  name: string;
   email: string;
   password: string;
-  username: string;
+  confirmPassword: string;
 }
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [userName, setUserName] = useState("");
+  const [name, setUserName] = useState("");
   const router = useRouter();
   const { toast } = useToast();
 
@@ -21,7 +22,7 @@ export default function Register() {
     setPassword(e.target.value);
   };
 
-  const handleUserName = (e: any) => {
+  const handleName = (e: any) => {
     setUserName(e.target.value);
   };
 
@@ -30,9 +31,10 @@ export default function Register() {
   };
 
   const account: Data = {
+    name: name,
     email: email,
     password: password,
-    username: userName,
+    confirmPassword: password,
   };
 
   const handleSubmit = async (e: any) => {
@@ -46,7 +48,7 @@ export default function Register() {
     } else {
       try {
         const response = await fetch(
-          "https://6670df540900b5f8724bd1b7.mockapi.io/users",
+          `${process.env.NEXT_PUBLIC_URL}/auth/register`,
           {
             method: "POST",
             headers: { "content-type": "application/json" },
@@ -54,9 +56,12 @@ export default function Register() {
           }
         );
 
+        const result = await response.json();
+
         if (!response.ok) {
-          console.log(response);
-          throw new Error("API Error (missing data)");
+          throw new Error("Failed to create account");
+        } else if (result.statusCode === 422) {
+          throw new Error(result.errors[0].message);
         }
 
         router.push("/login");
@@ -106,15 +111,15 @@ export default function Register() {
               </div>
               <div>
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Your user name
+                  Your name
                 </label>
                 <input
-                  type="userName"
-                  name="userName"
-                  id="userName"
+                  type="name"
+                  name="name"
+                  id="name"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="example"
-                  onChange={handleUserName}
+                  onChange={handleName}
                 />
               </div>
               <div>
