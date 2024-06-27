@@ -1,12 +1,23 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 
-const Search = ({ onCategory }: { onCategory: (category: string) => void }) => {
+const Search = ({ onCategory, onSearch, error }: any) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggleDropdown = useCallback(() => {
     setDropdownOpen((prev) => !prev);
   }, []);
+
+  const handleSearch = (e: any) => {
+    e.preventDefault();
+    const keywords = document.getElementById(
+      "search-dropdown"
+    ) as HTMLInputElement;
+    if (keywords) {
+      let value = keywords.value;
+      onSearch(value);
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -27,9 +38,6 @@ const Search = ({ onCategory }: { onCategory: (category: string) => void }) => {
   return (
     <form className="max-w-lg mx-auto">
       <div className="flex relative">
-        <label className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
-          Your Email
-        </label>
         <button
           id="dropdown-button"
           onClick={toggleDropdown}
@@ -85,7 +93,7 @@ const Search = ({ onCategory }: { onCategory: (category: string) => void }) => {
             required
           />
           <button
-            type="submit"
+            onClick={handleSearch}
             className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-blue-700 rounded-e-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             <svg
@@ -107,6 +115,11 @@ const Search = ({ onCategory }: { onCategory: (category: string) => void }) => {
           </button>
         </div>
       </div>
+      {error && (
+        <div className="text-[#c02d43] text-center underline decoration-pink-600 md:decoration-pink-400 cursor-default">
+          Error you need to specify a keyword on the search bar
+        </div>
+      )}
     </form>
   );
 };
