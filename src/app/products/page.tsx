@@ -51,7 +51,7 @@ export default function Products() {
           throw new Error("Error fetching");
         })
         .then((products) => {
-          setProducts(products);
+          setSearch(products);
         })
         .catch((error) => {
           console.log(error);
