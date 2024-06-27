@@ -60,6 +60,7 @@ export default function Login() {
       });
 
       router.push("/");
+      router.refresh();
     } catch (error: any) {
       toast({
         title: "Error login",

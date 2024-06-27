@@ -1,8 +1,14 @@
+import BarChart from "@/components/BarChart";
 import SideBar from "@/components/SideBar";
 import React from "react";
 
 export default function Management() {
-  return <>
-    <SideBar />
-  </>;
+  return (
+    <>
+      <SideBar />
+      <div className="max-w-3xl mx-auto" style={{height: "90vh", marginTop: "auto"}}>
+        <BarChart />
+      </div>
+    </>
+  );
 }

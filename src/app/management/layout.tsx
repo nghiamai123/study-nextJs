@@ -9,26 +9,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const timeOutId = setTimeout(() => setLoading(false), 1000);
-
-    return () => {
-      clearTimeout(timeOutId);
-    };
-  }, []);
-
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark">
       <Toaster />
-      {loading ? (
-        <Loader />
-      ) : (
-        <>
-          {children}
-        </>
-      )}
+      {children}
     </div>
   );
 }
