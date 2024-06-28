@@ -6,6 +6,8 @@ import { toast } from "@/components/ui/use-toast";
 import Image from "next/image";
 import Cookies from "js-cookie";
 import LinkItem from "./LinkItem";
+import ApiAuthRequest from "@/apiRequest/auth";
+import { headers } from "next/headers";
 
 export default function Header() {
   const route = useRouter();
@@ -21,19 +23,7 @@ export default function Header() {
     try {
       setIsLogin(false);
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_URL}/auth/logout`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionToken}`,
-          },
-          body: JSON.stringify({}),
-        }
-      );
-
-      const result = await response.json();
+      await ApiAuthRequest.logout(sessionToken as string)
 
       await fetch("api/logout", {
         method: "POST",
@@ -42,10 +32,6 @@ export default function Header() {
         },
         body: JSON.stringify(sessionToken),
       });
-
-      if (!response.ok) {
-        throw new Error("Error logout");
-      }
 
       toast({
         variant: "default",

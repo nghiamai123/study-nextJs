@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
+import ApiAuthRequest from "@/apiRequest/auth";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -30,30 +31,13 @@ export default function Login() {
     }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+      const res = await ApiAuthRequest.login({
+        email: email,
+        password: password,
       });
-
-      if (!res.ok) {
-        throw new Error("Email or password is incorrect");
-      }
-
-      const result = await res.json();
-
-      const authRes = await fetch("/api/auth", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(result),
-      });
-
-      if (!authRes.ok) {
-        throw new Error("API Error during authentication");
-      }
-
+      const result = res.payload as any;
+      await ApiAuthRequest.StoreSession(result);
+      
       toast({
         variant: "default",
         title: "Logged in successfully",

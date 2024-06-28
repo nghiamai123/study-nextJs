@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
+import ApiAuthRequest from "@/apiRequest/auth";
 
-interface Data {
+export interface Data {
   name: string;
   email: string;
   password: string;
@@ -47,22 +48,7 @@ export default function Register() {
       });
     } else {
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_URL}/auth/register`,
-          {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify(account),
-          }
-        );
-
-        const result = await response.json();
-
-        if (!response.ok) {
-          throw new Error("Failed to create account");
-        } else if (result.statusCode === 422) {
-          throw new Error(result.errors[0].message);
-        }
+        await ApiAuthRequest.register({name: name, email: email, password: password, confirmPassword: password})
 
         router.push("/login");
         router.refresh();

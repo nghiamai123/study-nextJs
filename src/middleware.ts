@@ -6,7 +6,7 @@ export function middleware(request: NextRequest) {
   
   const { pathname } = request.nextUrl
 
-  if (currentUser && (pathname === '/' || pathname === '/me' || pathname === '/products' || pathname === '/management')) {
+  if (currentUser && (pathname === '/' || pathname === '/me' || pathname === '/products' || pathname === '/management' || pathname === '/management/users' || pathname === '/management/products')) {
     return NextResponse.next()
   }
   
@@ -22,5 +22,5 @@ export function middleware(request: NextRequest) {
 }
  
 export const config = {
-  matcher: ['/', '/me', '/login', '/register', '/profile', '/products', '/management']
+  matcher: ['/', '/me', '/login', '/register', '/profile', '/products', '/management', '/management/users', '/management/products']
 }
