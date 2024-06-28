@@ -36,7 +36,7 @@ export default function SideBar() {
         <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 relative top-14 p-4">
           <ul className="space-y-2 font-medium">
             <li>
-              <Link href="/management" legacyBehavior>
+              <Link href="/management">
                 <div className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                   <svg
                     className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -56,7 +56,7 @@ export default function SideBar() {
               </Link>
             </li>
             <li>
-              <Link href="/management/products" legacyBehavior>
+              <Link href="/management/products">
                 <div className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                   <svg
                     className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -74,7 +74,7 @@ export default function SideBar() {
               </Link>
             </li>
             <li>
-              <Link href="/management/users" legacyBehavior>
+              <Link href="/management/users">
                 <div className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                   <div className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
                     <FaUser />
