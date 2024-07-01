@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import FormInput from "@/components/FormInput";
 
 interface User {
   email: string;
@@ -23,23 +24,12 @@ export default function User() {
     phone: "",
   });
 
-  const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUser({ ...user, email: e.target.value });
-  };
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setUser((prevUser) => ({ ...prevUser, [id]: value }));
+  }, []);
 
-  const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUser({ ...user, password: e.target.value });
-  };
-
-  const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUser({ ...user, username: e.target.value });
-  };
-
-  const handlePhone = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUser({ ...user, phone: e.target.value });
-  };
-
-  const handleSubmit: any = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const response = await fetch(
@@ -51,7 +41,7 @@ export default function User() {
         }
       );
       if (response.ok) {
-        const data = await response.json();
+        await response.json();
         router.push("/management/users");
         toast({
           title: "Success",
@@ -71,72 +61,39 @@ export default function User() {
   };
 
   return (
-    <div className="max-w-sm mx-auto mt-20">
-      <form onSubmit={handleSubmit} style={{width: "110vh", margin: "0 auto"}}>
-        <div className="mb-5">
-          <label
-            htmlFor="email"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Email
-          </label>
-          <input
-            type="text"
-            id="email"
-            placeholder={user.email}
-            value={user.email}
-            onChange={handleEmail}
-            className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          />
-        </div>
-        <div className="mb-5">
-          <label
-            htmlFor="phone"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Phone Number
-          </label>
-          <input
-            type="text"
-            id="phone"
-            placeholder={user.phone}
-            value={user.phone}
-            onChange={handlePhone}
-            className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          />
-        </div>
-        <div className="mb-5">
-          <label
-            htmlFor="password"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            placeholder={user.password}
-            value={user.password}
-            onChange={handlePassword}
-            className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          />
-        </div>
-        <div className="mb-5">
-          <label
-            htmlFor="username"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Username
-          </label>
-          <input
-            type="text"
-            id="username"
-            placeholder={user.username}
-            value={user.username}
-            onChange={handleUsername}
-            className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          />
-        </div>
+    <div className="mt-20">
+      <form
+        onSubmit={handleSubmit}
+        style={{ width: "110vh", margin: "0 auto" }}
+      >
+        <FormInput
+          id="email"
+          label="Email"
+          type="text"
+          value={user.email}
+          onChange={handleChange}
+        />
+        <FormInput
+          id="phone"
+          label="Phone Number"
+          type="text"
+          value={user.phone}
+          onChange={handleChange}
+        />
+        <FormInput
+          id="password"
+          label="Password"
+          type="password"
+          value={user.password}
+          onChange={handleChange}
+        />
+        <FormInput
+          id="username"
+          label="Username"
+          type="text"
+          value={user.username}
+          onChange={handleChange}
+        />
         <div className="flex gap-3 mb-5">
           <button
             type="submit"

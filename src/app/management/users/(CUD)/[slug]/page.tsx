@@ -1,12 +1,21 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import FormInput from "@/components/FormInput";
 
-export default function User({ params }: any) {
+interface User {
+  email: string;
+  password: string;
+  id: string;
+  username: string;
+  phone: string;
+}
+
+export default function User({ params }: { params: { slug: string } }) {
   const { slug } = params;
-  const [user, setUser] = useState({
+  const [user, setUser] = useState<User>({
     email: "",
     password: "",
     id: "",
@@ -17,131 +26,92 @@ export default function User({ params }: any) {
   const router = useRouter();
 
   useEffect(() => {
-    fetch(`https://6670df540900b5f8724bd1b7.mockapi.io/users/${slug}`, {
-      method: "GET",
-      headers: { "content-type": "application/json" },
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-      })
-      .then((user) => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(
+          `https://6670df540900b5f8724bd1b7.mockapi.io/users/${slug}`
+        );
+        if (!res.ok) throw new Error("Failed to fetch user");
+        const user = await res.json();
         setUser(user);
-      })
-      .catch((error) => {
+      } catch (error: any) {
         toast({
           title: "Error",
           description: error.message,
           variant: "destructive",
         });
-      });
+      }
+    };
+    fetchUser();
   }, [slug, toast]);
 
-  const handleEmail = (e: any) => {
-    e.preventDefault();
-    setUser({ ...user, email: e.target.value });
-  };
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setUser((prevUser) => ({ ...prevUser, [id]: value }));
+  }, []);
 
-  const handlePassword = (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setUser({ ...user, password: e.target.value });
-  };
-
-  const handleUsername = (e: any) => {
-    e.preventDefault();
-    setUser({ ...user, username: e.target.value });
-  };
-
-  const handlePhone = (e: any) => {
-    e.preventDefault();
-    setUser({ ...user, phone: e.target.value });
-  };
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    fetch(`https://6670df540900b5f8724bd1b7.mockapi.io/users/${slug}`, {
-      method: "PUT",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(user),
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
+    try {
+      const res = await fetch(
+        `https://6670df540900b5f8724bd1b7.mockapi.io/users/${slug}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(user),
         }
-      })
-      .then((user) => {
-        router.push("/management/users");
-        toast({
-          title: "Success",
-          description: "User updated successfully",
-          variant: "default",
-        });
-      })
-      .catch((error) => {
-        toast({
-          title: "Error",
-          description: error.message,
-          variant: "destructive",
-        });
+      );
+      if (!res.ok) throw new Error("Failed to update user");
+      await res.json();
+      router.push("/management/users");
+      toast({
+        title: "Success",
+        description: "User updated successfully",
+        variant: "default",
       });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
-    <>
-      <form className="mt-20" onSubmit={handleSubmit} style={{width: "110vh", margin: "0 auto"}}>
-        <div className="mb-5">
-          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Email
-          </label>
-          <input
-            type="text"
-            id="large-input"
-            placeholder={user?.email}
-            value={user?.email}
-            onChange={handleEmail}
-            className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          />
-        </div>
-        <div className="mb-5">
-          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Phone Number
-          </label>
-          <input
-            type="text"
-            id="large-input"
-            placeholder={user?.phone}
-            value={user?.phone}
-            onChange={handlePhone}
-            className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          />
-        </div>
-        <div className="mb-5">
-          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Password
-          </label>
-          <input
-            type="text"
-            id="large-input"
-            placeholder={user?.password}
-            value={user?.password}
-            onChange={handlePassword}
-            className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          />
-        </div>
-        <div className="mb-5">
-          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Username
-          </label>
-          <input
-            type="text"
-            id="large-input"
-            placeholder={user?.username}
-            value={user?.username}
-            onChange={handleUsername}
-            className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          />
-        </div>
+    <div className="mt-20">
+      <form
+        onSubmit={handleSubmit}
+        style={{ width: "110vh", margin: "0 auto" }}
+      >
+        <FormInput
+          id="email"
+          label="Email"
+          type="text"
+          value={user.email}
+          onChange={handleChange}
+        />
+        <FormInput
+          id="phone"
+          label="Phone Number"
+          type="text"
+          value={user.phone}
+          onChange={handleChange}
+        />
+        <FormInput
+          id="password"
+          label="Password"
+          type="password"
+          value={user.password}
+          onChange={handleChange}
+        />
+        <FormInput
+          id="username"
+          label="Username"
+          type="text"
+          value={user.username}
+          onChange={handleChange}
+        />
         <div className="flex gap-3 mb-5">
           <button
             type="submit"
@@ -158,6 +128,6 @@ export default function User({ params }: any) {
           </Link>
         </div>
       </form>
-    </>
+    </div>
   );
 }

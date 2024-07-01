@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -23,7 +23,7 @@ export default function Header() {
     try {
       setIsLogin(false);
 
-      await ApiAuthRequest.logout(sessionToken as string)
+      await ApiAuthRequest.logout(sessionToken as string);
 
       await fetch("api/logout", {
         method: "POST",
@@ -125,11 +125,7 @@ export default function Header() {
             <ul className="flex flex-col mt-4 font-medium justify-content lg:flex-row lg:space-x-8 lg:mt-0">
               <LinkItem href="/" pathname={pathname} text="Home" />
               <LinkItem href="/products" pathname={pathname} text="Products" />
-              <LinkItem
-                href="/management"
-                pathname={pathname}
-                text="Management"
-              />
+              <LinkItem href="/management" pathname={pathname} text="Management"/>
               <LinkItem href="/contact" pathname={pathname} text="Contact Us" />
               <LinkItem href="/#" pathname={pathname} text="Team" />
               <LinkItem href="/me" pathname={pathname} text="My Profile" />

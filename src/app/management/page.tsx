@@ -6,7 +6,7 @@ export default function Management() {
   return (
     <>
       <SideBar />
-      <div className="max-w-3xl mx-auto" style={{height: "90vh", marginTop: "auto"}}>
+      <div className="max-w-3xl mx-auto" style={{height: "80vh", marginTop: "auto"}}>
         <BarChart />
       </div>
     </>

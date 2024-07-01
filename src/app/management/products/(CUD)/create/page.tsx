@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import FormInput from "@/components/FormInput";
 
 interface Product {
   price: string;
@@ -46,26 +47,28 @@ export default function Product() {
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setProduct({ ...product, [name]: value });
-  };
+  const handleInputChange = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { id, value, files } = e.target;
 
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      try {
-        const imageUrl = await getUrlUpdateUserImg(file);
-        setProduct({ ...product, image: imageUrl });
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to upload image",
-          variant: "destructive",
-        });
+      if (id === "image" && files?.length) {
+        const file = files[0];
+        try {
+          const imageUrl = await getUrlUpdateUserImg(file);
+          setProduct((prevProduct) => ({ ...prevProduct, [id]: imageUrl }));
+        } catch (error) {
+          toast({
+            title: "Error",
+            description: "Failed to upload image",
+            variant: "destructive",
+          });
+        }
+      } else {
+        setProduct((prevProduct) => ({ ...prevProduct, [id]: value }));
       }
-    }
-  };
+    },
+    []
+  );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -99,53 +102,38 @@ export default function Product() {
   };
 
   return (
-    <form className="mt-20" onSubmit={handleSubmit} style={{ width: "110vh", margin: "0 auto"}}>
-      <div className="mb-5">
-        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-          Price
-        </label>
-        <input
-          type="text"
-          name="price"
-          value={product.price}
-          onChange={handleInputChange}
-          className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        />
-      </div>
-      <div className="mb-5">
-        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-          Image
-        </label>
-        <input
-          type="file"
-          onChange={handleImageChange}
-          className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        />
-      </div>
-      <div className="mb-5">
-        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-          Description
-        </label>
-        <input
-          type="text"
-          name="description"
-          value={product.description}
-          onChange={handleInputChange}
-          className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        />
-      </div>
-      <div className="mb-5">
-        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-          Product Name
-        </label>
-        <input
-          type="text"
-          name="name"
-          value={product.name}
-          onChange={handleInputChange}
-          className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        />
-      </div>
+    <form
+      className="!mt-10"
+      onSubmit={handleSubmit}
+      style={{ width: "110vh", margin: "0 auto" }}
+    >
+      <FormInput
+        id="price"
+        label="Price"
+        type="string"
+        value={product.price}
+        onChange={handleInputChange}
+      />
+      <FormInput
+        id="image"
+        label="Image"
+        type="file"
+        onChange={handleInputChange}
+      />
+      <FormInput
+        id="description"
+        label="Description"
+        type="text"
+        value={product.description}
+        onChange={handleInputChange}
+      />
+      <FormInput
+        id="name"
+        label="Name Product"
+        type="text"
+        value={product.name}
+        onChange={handleInputChange}
+      />
       <div className="flex gap-3 mb-5">
         <button
           type="submit"
