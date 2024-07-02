@@ -31,13 +31,6 @@ export default function Register() {
     setEmail(e.target.value);
   };
 
-  const account: Data = {
-    name: name,
-    email: email,
-    password: password,
-    confirmPassword: password,
-  };
-
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (email === "" || password === "") {
@@ -48,7 +41,12 @@ export default function Register() {
       });
     } else {
       try {
-        await ApiAuthRequest.register({name: name, email: email, password: password, confirmPassword: password})
+        await ApiAuthRequest.register({
+          name: name,
+          email: email,
+          password: password,
+          confirmPassword: password,
+        });
 
         router.push("/login");
         router.refresh();
@@ -131,7 +129,7 @@ export default function Register() {
                 You have an account?{" "}
                 <Link
                   href="/login"
-                  className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                  className="w-full dark:text-white text-black  bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                 >
                   Sign in
                 </Link>

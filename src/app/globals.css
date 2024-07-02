@@ -89,9 +89,3 @@
     background-image: linear-gradient(to right, #d2b48c, #a0522d, #8b4513);
   }
 }
-
-@layer utilities {
-  .grid-cols-custom {
-    grid-template-columns: 200px 1fr;
-  }
-}

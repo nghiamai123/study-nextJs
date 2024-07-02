@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 
-// Hàm để lấy chi tiết sản phẩm dựa trên productId
 const getProductDetails = async (productId: string) => {
   const response = await fetch(
     `https://6670df540900b5f8724bd1b7.mockapi.io/products/${productId}`

@@ -7,7 +7,6 @@ import Image from "next/image";
 import Cookies from "js-cookie";
 import LinkItem from "./LinkItem";
 import ApiAuthRequest from "@/apiRequest/auth";
-import { headers } from "next/headers";
 
 export default function Header() {
   const route = useRouter();
@@ -32,6 +31,10 @@ export default function Header() {
         },
         body: JSON.stringify(sessionToken),
       });
+
+      if(sessionToken) {
+        Cookies.remove("sessionToken");
+      }
 
       toast({
         variant: "default",
@@ -64,7 +67,7 @@ export default function Header() {
               Restaurants
             </span>
           </Link>
-          <div className="flex items-center lg:order-2">
+          <div className="flex items-center lg:order-2 gap-2">
             {!isLogin && (
               <>
                 <LinkItem href="/login" pathname={pathname} text="Log in" />

@@ -6,19 +6,11 @@ import Link from "next/link";
 import Image from "next/image";
 import Loading from "@/components/Loader";
 
-interface Product {
-  id: string;
-  price: string;
-  image: string;
-  name: string;
-  createAt: string;
-}
-
 export default function Product({ params }: any) {
   const { slug } = params;
   const [tab, setTab] = useState("about");
   const [loading, setLoading] = useState(true);
-  const [product, setProduct] = useState<Product>({
+  const [product, setProduct] = useState({
     id: "",
     name: "",
     image: "",
@@ -53,7 +45,7 @@ export default function Product({ params }: any) {
         <Loading />
       ) : (
         <div className="container mx-auto">
-          <div className="bg-[#1f2937] shadow-lg rounded-lg p-6 mt-6">
+          <div className="dark:bg-[#1f2937] shadow-lg rounded-lg p-6 mt-6">
             <button className="py-2">
               <Link href="/products">
                 <FontAwesomeIcon icon={faArrowLeft} /> BACK

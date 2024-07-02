@@ -1,7 +1,8 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
 
-const Search = ({ onCategory, onSearch, error }: any) => {
+const Search = ({ onCategory, onSearch, onLoad, error }: any) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggleDropdown = useCallback(() => {
@@ -116,8 +117,8 @@ const Search = ({ onCategory, onSearch, error }: any) => {
         </div>
       </div>
       {error && (
-        <div className="text-[#c02d43] text-center underline decoration-pink-600 md:decoration-pink-400 cursor-default">
-          Error you need to specify a keyword on the search bar
+        <div onClick={onLoad} className="text-[#c02d43] text-center underline decoration-pink-600 md:decoration-pink-400 cursor-pointer">
+          Error you need to specify a keyword on the search bar (Click to View All)
         </div>
       )}
     </form>

@@ -52,11 +52,11 @@ export default function Products() {
     <Loader />
   ) : (
     <>
-      <div className="grid grid-cols-3 gap-2 h-screen m-0">
+      <div className="!grid !grid-cols-3 gap-2 h-screen m-0">
         <div className="col-span-1">
           <SideBar />
         </div>
-        <div className="grid grid-cols-3 gap-2 col-span-2 mt-5 mb-5 mr-5 relative -left-20">
+        <div className="!grid !grid-cols-3 gap-2 col-span-2 mt-5 mb-5 mr-5 relative -left-20">
           {products.map((product, index) => (
             <Card product={product} key={index} onDelete={handleDelete} />
           ))}

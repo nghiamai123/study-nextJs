@@ -5,18 +5,10 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import FormInput from "@/components/FormInput";
 
-interface User {
-  email: string;
-  password: string;
-  id: string;
-  username: string;
-  phone: string;
-}
-
 export default function User() {
   const { toast } = useToast();
   const router = useRouter();
-  const [user, setUser] = useState<User>({
+  const [user, setUser] = useState({
     email: "",
     password: "",
     id: "",

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import { MdOutlineTableRestaurant } from "react-icons/md";
 
@@ -5,9 +6,11 @@ const LandingPage: React.FC = () => {
   return (
     <div className="banner bg-white flex items-center justify-center text-center text-black">
       <div className="flex flex-col items-center">
-        <button className="bg-white py-2 px-4 rounded-full mb-4 text-black">
-          Discover Culinary Excellence →
-        </button>
+        <Link href='/products'>
+          <button className="bg-white py-2 px-4 rounded-full mb-4 text-black">
+            Discover Culinary Excellence →
+          </button>
+        </Link>
         <h1 className="text-4xl md:text-6xl font-bold mb-4 text-white">
           Online Reservations
         </h1>

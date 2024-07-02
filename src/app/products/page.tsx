@@ -5,6 +5,9 @@ import Loader from "@/components/Loader";
 import Search from "@/components/Search";
 import "./style.css";
 import levenshtein from "js-levenshtein";
+import ReactPaginate from "react-paginate";
+import { FaLongArrowAltLeft } from "react-icons/fa";
+import { FaLongArrowAltRight } from "react-icons/fa";
 
 interface Product {
   id: string;
@@ -17,14 +20,27 @@ interface Product {
 
 export default function Products() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [search, setSearch] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [newDataProducts, setNewDataProducts] = useState([]);
+  const [currentDataProducts, setCurrentDataProducts] = useState<Product[]>(products);
   const [error, setError] = useState<boolean>(false);
   useEffect(() => {
     const idTimeOut = setTimeout(() => setLoading(false), 1000);
+    setCurrentPage(0);
 
     return () => clearTimeout(idTimeOut);
   }, []);
+
+  useEffect(() => {
+    const indexLast = (currentPage + 1) * 6;
+    const indexFirst = indexLast - 6;
+    setCurrentDataProducts(newDataProducts.slice(indexFirst, indexLast));
+  }, [newDataProducts, currentPage]);
+
+  const handlePageClick = (e: any) => {
+    setCurrentPage(e.selected);
+  };
 
   const fetchProducts = async () => {
     const response = await fetch(
@@ -32,6 +48,8 @@ export default function Products() {
     );
     const data = await response.json();
     setProducts(data);
+    setNewDataProducts(data);
+    setError(false);
   };
 
   const handleCategory = async (category = "cow") => {
@@ -51,7 +69,8 @@ export default function Products() {
           throw new Error("Error fetching");
         })
         .then((products) => {
-          setSearch(products);
+          setNewDataProducts(products);
+          setError(false);
         })
         .catch((error) => {
           console.log(error);
@@ -97,9 +116,13 @@ export default function Products() {
             Math.min(categoryDistanceB, nameDistanceB)
           );
         });
-
-      setError(false);
-      setSearch(result);
+      setNewDataProducts(result as any);
+      if(result.length <= 0) {
+        setError(true);
+      }
+      else {
+        setError(false);
+      }
     }
   };
 
@@ -114,13 +137,44 @@ export default function Products() {
       <Search
         onCategory={handleCategory}
         onSearch={handleSearch}
+        onLoad={fetchProducts}
         error={error}
       />
-      <div className="m-10">
+      <div className="m-9">
         <div className="grid text-wrap gap-5">
-          {(search.length > 0 ? search : products).map((product) => {
+          {currentDataProducts.map((product) => {
             return <Card key={product.id} product={product} />;
           })}
+        </div>
+        <div className="paginate">
+          <ReactPaginate
+            activeClassName={"item active"}
+            breakClassName={"item break-me"}
+            breakLabel={"..."}
+            containerClassName={"pagination"}
+            disabledClassName={"disabled-page"}
+            marginPagesDisplayed={2}
+            nextClassName={"item next "}
+            nextLabel={
+              currentDataProducts.length === 0 ? (
+                ""
+              ) : (
+                <FaLongArrowAltRight style={{ fontSize: 18 }} />
+              )
+            }
+            onPageChange={handlePageClick}
+            pageCount={Math.ceil(newDataProducts.length / 6)}
+            pageClassName={"item pagination-page"}
+            pageRangeDisplayed={2}
+            previousClassName={"item previous"}
+            previousLabel={
+              currentDataProducts.length === 0 ? (
+                ""
+              ) : (
+                <FaLongArrowAltLeft style={{ fontSize: 18 }} />
+              )
+            }
+          />
         </div>
       </div>
     </div>

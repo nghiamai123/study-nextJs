@@ -5,17 +5,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import FormInput from "@/components/FormInput";
 
-interface User {
-  email: string;
-  password: string;
-  id: string;
-  username: string;
-  phone: string;
-}
-
 export default function User({ params }: { params: { slug: string } }) {
   const { slug } = params;
-  const [user, setUser] = useState<User>({
+  const [user, setUser] = useState({
     email: "",
     password: "",
     id: "",
